@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.utils.validation import check_X_y, check_is_fitted, check_array
 from sklearn.base import BaseEstimator, RegressorMixin
 
-from scipy.optimize import minimize
+from scipy.optimize import minimize, Bounds, LinearConstraint
 
 class Synth(BaseEstimator, RegressorMixin):
 
@@ -18,14 +18,16 @@ class Synth(BaseEstimator, RegressorMixin):
         y = df[(df.post==0) & (df.treat==1)][outcome]
         X, y = check_X_y(X, y)
 
-        initial_w = np.zeros(X.shape[1])
+        initial_w = np.ones(X.shape[1])/X.shape[1]
+        v = np.diag(np.ones(X.shape[0])/X.shape[0])
 
-        def fun_obj(w, X, y):
-            return np.sum((X @ w - y) ** 2)
-        constraints = [{'type': 'eq', 'fun': lambda w: np.sum(w) - 1}]
-        bounds = [(0, 1)] * X.shape[1]
+        def fun_obj(w, X, y, v):
+            return np.mean(np.sqrt((y - X @ w).T @ v @ (y - X @ w)))
+        
+        bounds = Bounds(lb=0, ub=1)
+        constraints = LinearConstraint(np.ones(X.shape[1]), lb= 1, ub= 1)
 
-        result = minimize(fun_obj, x0=initial_w, args=(X, y), method='SLSQP', bounds=bounds, constraints=constraints)
+        result = minimize(fun_obj, x0=initial_w, args=(X, y, v), method='SLSQP', bounds=bounds, constraints=constraints)
 
         self.X_ = X
         self.y_ = y
