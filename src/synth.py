@@ -15,7 +15,7 @@ class Synth(BaseEstimator, RegressorMixin):
         df['post'] = df.groupby(time)[treated].transform('max')
 
         X = df[(df.post==0) & (df.treat==0)].pivot(index=time, columns=id, values=outcome)
-        y = df[(df.post==0) & (df.treat==1)][outcome]
+        y = df[(df.post==0) & (df.treat==1)].groupby(time)[outcome].mean()
         X, y = check_X_y(X, y)
 
         initial_w = np.ones(X.shape[1])/X.shape[1]
