@@ -11,4 +11,4 @@ Add papers you think that pushed the frontier in this area, and built the Litera
 + All the data used in these anlysis are stored in the data folder.
 + The reading list contains papers are about to be replicated.
 
-1. Synthetic Control Methods for Comparative Case Studies [Replication]<https://github.com/CongWang141/Literature-Light-Map/blob/main/1.%20Synthetic%20control/synthetic_control.ipynb>
+1. Synthetic Control Methods for Comparative Case Studies [Replication](https://github.com/CongWang141/Literature-Light-Map/blob/main/1.%20Synthetic%20control/synthetic_control.ipynb)
